@@ -115,7 +115,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EspCmd.h" />
+    <ClInclude Include="LineNavigator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="__vm\.ESP.vsarduino.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="EspCmd.cpp" />
+    <ClCompile Include="LineNavigator.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
