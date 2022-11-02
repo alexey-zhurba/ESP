@@ -38,9 +38,6 @@
     <ClCompile Include="LineNavigator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EspCmd.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CmdManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

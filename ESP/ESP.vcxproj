@@ -125,7 +125,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CmdManager.cpp" />
-    <ClCompile Include="EspCmd.cpp" />
     <ClCompile Include="LineNavigator.cpp">
       <SubType>
       </SubType>

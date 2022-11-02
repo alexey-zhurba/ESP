@@ -17,15 +17,17 @@ namespace ESP {
 	class CmdManager {
 	private:
 		CmdManager();
-		EspCmd m_cmdQueue[MAX_COMMANDS];
+		EspCmd m_cmdQueue[MAX_COMMANDS] = { 0 };
 		int m_cmdQueueStart;
 		int m_cmdQueueEnd;
+		int m_cmdQueueLength;
 		EspCmd pop();
+		void handleCommmand();
 	public:
 		CmdManager(CmdManager const&) = delete;
 		void operator=(CmdManager const&) = delete;
 		CmdManager* instance();
-		void update();
+		void flushCmds();
 		void sendCmd(EspCmd cmd);
 	};
 }
