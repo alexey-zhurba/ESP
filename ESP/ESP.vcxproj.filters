@@ -30,12 +30,18 @@
     <ClInclude Include="EspCmd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CmdManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LineNavigator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EspCmd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

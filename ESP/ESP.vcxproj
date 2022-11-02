@@ -115,6 +115,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CmdManager.h" />
     <ClInclude Include="EspCmd.h" />
     <ClInclude Include="LineNavigator.h">
       <SubType>
@@ -123,6 +124,7 @@
     <ClInclude Include="__vm\.ESP.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CmdManager.cpp" />
     <ClCompile Include="EspCmd.cpp" />
     <ClCompile Include="LineNavigator.cpp">
       <SubType>
