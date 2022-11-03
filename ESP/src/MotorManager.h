@@ -24,7 +24,7 @@ namespace _ESP {
 		MotorManager(MotorManager const&) = delete;
 		void operator=(MotorManager const&) = delete;
 		static MotorManager* instance();
-		void createMove(int forward, int left, bool bStop);
+		void createMove(int forward, int left, bool bStop, CmdOrigin origin);
 	};
 }
 

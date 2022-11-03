@@ -66,7 +66,7 @@ void _ESP::LineNavigator::stop()
 	if (isStopped())
 		return;
 	TimedObject::stop();
-	m_motorMngr->createMove(0, 0, true);
+	m_motorMngr->createMove(0, 0, true, SysCmd);
 }
 
 void _ESP::LineNavigator::handlerAI(EspCmd cmd, LineNavigator* _this)
@@ -93,15 +93,15 @@ void _ESP::LineNavigator::update()
 
 		if (!bLWhite)
 		{
-			m_motorMngr->createMove(0, getRotationSpeed(), false); //linker sensor auf schwarz -> nach links
+			m_motorMngr->createMove(0, getRotationSpeed(), false, SysCmd); //linker sensor auf schwarz -> nach links
 		}
 		else if (!bRWhite)
 		{
-			m_motorMngr->createMove(0, -getRotationSpeed(), false); //rechter sensor auf schwarz -> nach rechts
+			m_motorMngr->createMove(0, -getRotationSpeed(), false, SysCmd); //rechter sensor auf schwarz -> nach rechts
 		}
 		else
 		{
-			m_motorMngr->createMove(getSpeed(), 0, false);
+			m_motorMngr->createMove(getSpeed(), 0, false, SysCmd);
 		}
 	}
 }

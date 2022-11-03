@@ -11,6 +11,7 @@
 
 #include "EspCmd.h"
 #include <RoboApi.h>
+#include <Debug.h>
 
 #define MAX_COMMANDS 100
 

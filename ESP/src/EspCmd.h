@@ -9,9 +9,9 @@
 	#include "WProgram.h"
 #endif
 
-#define FL_ACTIVE (1 << 0)
-#define FL_MOVE (1 << 1)
-#define FL_AI (1 << 2)
+#define FL_ACTIVE (1u << 0u)
+#define FL_MOVE (1u << 1u)
+#define FL_AI (1u << 2u)
 
 namespace _ESP {
 	enum CmdOrigin {

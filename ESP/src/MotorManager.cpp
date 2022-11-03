@@ -55,9 +55,11 @@ _ESP::MotorManager* _ESP::MotorManager::instance()
     return &g_instance;
 }
 
-void _ESP::MotorManager::createMove(int forward, int left, bool bStop)
+void _ESP::MotorManager::createMove(int forward, int left, bool bStop, CmdOrigin origin)
 {
     EspCmd cmd;
+    PRINT_ENTER_FUNC();
+    cmd.origin = origin;
     if (!bStop) 
     {
         cmd.flags = CmdManager::instance()->stateFlags() | FL_MOVE;
@@ -68,5 +70,9 @@ void _ESP::MotorManager::createMove(int forward, int left, bool bStop)
     {
         cmd.flags = CmdManager::instance()->stateFlags() & (~FL_MOVE);
     }
+    
+    DEBUG_PRINT("creating move cmd. flags: ");
+    DEBUG_PRINTLN(cmd.flags);
     CmdManager::instance()->sendCmd(cmd);
+    PRINT_EXIT_FUNC();
 }

@@ -19,10 +19,12 @@ _ESP::LineNavigator lineNav(irSensLinks, irSensRechts);
 
 void setup() {
 	_ESP::EspCmd cmd{ 0 };
-	cmd.flags = FL_ACTIVE; //start robot line navigator
+	cmd.flags = FL_ACTIVE;
 	cmd.origin = _ESP::SysCmd;
 	_ESP::CmdManager::instance()->sendCmd(cmd);
-	_ESP::MotorManager::instance()->createMove(255, 0, false);
+	_ESP::CmdManager::instance()->flushCmds();
+	_ESP::CmdManager::instance()->sendCmd(cmd);
+	_ESP::MotorManager::instance()->createMove(255, 0, false, _ESP::SysCmd);
 	Serial.begin(9600);
 }
 
