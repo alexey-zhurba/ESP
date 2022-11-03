@@ -11,6 +11,7 @@
 
 #define FL_ACTIVE (1 << 0)
 #define FL_MOVE (1 << 1)
+#define FL_AI (1 << 2)
 
 namespace ESP {
 	enum CmdOrigin {
@@ -21,10 +22,8 @@ namespace ESP {
 		uint16_t flags; //OR'd cmd flags
 		CmdOrigin origin;
 		struct move_t{
-			int speed_fwd;
-			int speed_bwd;
-			int speed_left;
-			int speed_right;
+			int forward;
+			int left;
 		} move;
 	};
 

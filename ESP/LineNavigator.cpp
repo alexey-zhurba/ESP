@@ -4,10 +4,32 @@
 
 #include "LineNavigator.h"
 
-ESP::LineNavigator::LineNavigator(IRSensor irSensLinks, IRSensor irSensRechts, MotorGroup motorGroup) : m_irSensLinks(irSensLinks), m_irSensRechts(irSensRechts), m_motorGroup(motorGroup)
+ESP::LineNavigator::LineNavigator(IRSensor irSensLinks, IRSensor irSensRechts) : m_irSensLinks(irSensLinks), m_irSensRechts(irSensRechts), m_motorMngr(MotorManager::instance())
 {
 	setSpeed(100);
 	setRotationSpeed(getSpeed() / 2);
+	CmdCallback callback;
+	callback.cmdHandler = (cmdHandler_fn)handlerAI;
+	callback.param = this;
+	callback.triggerMask = FL_AI;
+	callback.bMaskNot = false;
+	CmdManager::instance()->registerCmdCallback(callback);
+	callback.cmdHandler = (cmdHandler_fn)handlerStopAI;
+	callback.bMaskNot = true;
+	CmdManager::instance()->registerCmdCallback(callback);
+}
+
+ESP::LineNavigator::~LineNavigator()
+{
+	CmdCallback callback;
+	callback.cmdHandler = (cmdHandler_fn)handlerAI;
+	callback.param = this;
+	callback.triggerMask = FL_AI;
+	callback.bMaskNot = false;
+	CmdManager::instance()->unregisterCmdCallback(callback);
+	callback.cmdHandler = (cmdHandler_fn)handlerStopAI;
+	callback.bMaskNot = true;
+	CmdManager::instance()->unregisterCmdCallback(callback);
 }
 
 void ESP::LineNavigator::setSpeed(int iSpeed)
@@ -32,6 +54,8 @@ int ESP::LineNavigator::getRotationSpeed()
 
 void ESP::LineNavigator::start()
 {
+	if (!isStopped())
+		return;
 	m_bLWhiteLast = m_irSensLinks.isWhite();
 	m_bRWhiteLast = m_irSensRechts.isWhite();
 	TimedObject::start();
@@ -39,8 +63,21 @@ void ESP::LineNavigator::start()
 
 void ESP::LineNavigator::stop()
 {
+	if (isStopped())
+		return;
 	TimedObject::stop();
-	m_motorGroup.stop();
+	m_motorMngr->createMove(0, 0, true);
+}
+
+void ESP::LineNavigator::handlerAI(EspCmd cmd, LineNavigator* _this)
+{
+	_this->start();
+}
+
+void ESP::LineNavigator::handlerStopAI(EspCmd cmd, LineNavigator* _this)
+{
+	_this->stop();
+	//TODO: sendCmd FL_USER maybe global handler manager for both FL_USER AND FL_AI is better
 }
 
 void ESP::LineNavigator::update()
@@ -56,15 +93,15 @@ void ESP::LineNavigator::update()
 
 		if (!bLWhite)
 		{
-			motor.links(getRotationSpeed()); //linker sensor auf schwarz -> nach links
+			m_motorMngr->createMove(0, getRotationSpeed(), false); //linker sensor auf schwarz -> nach links
 		}
 		else if (!bRWhite)
 		{
-			motor.rechts(getRotationSpeed()); //rechter sensor auf schwarz -> nach rechts
+			m_motorMngr->createMove(0, -getRotationSpeed(), false); //rechter sensor auf schwarz -> nach rechts
 		}
 		else
 		{
-			motor.vorwaerts(getSpeed());
+			m_motorMngr->createMove(getSpeed(), 0, false);
 		}
 	}
 }

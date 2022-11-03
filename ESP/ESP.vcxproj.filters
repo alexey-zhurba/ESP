@@ -33,12 +33,21 @@
     <ClInclude Include="CmdManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MotorManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PinDef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LineNavigator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CmdManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MotorManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

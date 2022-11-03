@@ -4,7 +4,15 @@
 
 #include "CmdManager.h"
 
-ESP::CmdManager::CmdManager() : m_cmdQueueStart(0), m_cmdQueueEnd(0), m_cmdQueueLength(0) {}
+ESP::CmdManager::CmdManager() : m_cmdQueueStart(0), m_cmdQueueEnd(0), m_cmdQueueLength(0), m_callbackSP(0) 
+{
+	CmdCallback callback;
+	callback.cmdHandler = defaultCmdHandler;
+	callback.triggerMask = 0; 
+	callback.param = nullptr;
+	callback.bMaskNot = true;
+	registerCmdCallback(callback);
+}
 
 ESP::EspCmd ESP::CmdManager::pop()
 {
@@ -19,6 +27,10 @@ ESP::EspCmd ESP::CmdManager::pop()
 	return m_cmdQueue[cmdQueueStart];
 }
 
+void ESP::CmdManager::defaultCmdHandler(EspCmd cmd, void* param)
+{
+}
+
 ESP::CmdManager* ESP::CmdManager::instance()
 {
 	static CmdManager g_cmdManager;
@@ -30,7 +42,20 @@ void ESP::CmdManager::flushCmds()
 	while (m_cmdQueueLength > 0)
 	{
 		EspCmd cmd = pop();
-		cmd.flags
+		m_stateFlags = cmd.flags;
+		if (cmd.flags & FL_ACTIVE)
+		{
+			for (int i = 0; i < m_callbackSP; ++m_callbackSP)
+			{
+				bool condition = ((!m_callbackStack[i].bMaskNot && ((cmd.flags & m_callbackStack[i].triggerMask) == m_callbackStack[i].triggerMask)) //mask triggered ?
+					|| (m_callbackStack[i].bMaskNot && ((cmd.flags & ~m_callbackStack[i].triggerMask) == cmd.flags))) //not mask triggered ?
+					&& ((cmd.flags & m_callbackStack[i].triggerMask) != (m_stateFlags & m_callbackStack[i].triggerMask)); //mask changed ?
+				if (condition)
+				{
+					m_callbackStack[i].cmdHandler(cmd, m_callbackStack[i].param);
+				}
+			}
+		}
 	}
 }
 
@@ -45,4 +70,30 @@ void ESP::CmdManager::sendCmd(EspCmd cmd)
 	m_cmdQueueEnd = cmdQueueEnd;
 	m_cmdQueue[m_cmdQueueEnd] = cmd;
 	++m_cmdQueueLength;
+}
+
+void ESP::CmdManager::registerCmdCallback(CmdCallback callback)
+{
+	if (m_callbackSP < COUNT_OF(m_callbackStack))
+		m_callbackStack[m_callbackSP++] = callback;
+}
+
+void ESP::CmdManager::unregisterCmdCallback(CmdCallback callback)
+{
+	for (int i = m_callbackSP - 1; i >= 0; --i)
+	{
+		if (m_callbackStack[i] == callback)
+		{
+			--m_callbackSP;
+			for (int j = i; j < m_callbackSP; ++j)
+			{
+				m_callbackStack[j] = m_callbackStack[j + 1]; //Alle Elemente nach links einrücken
+			}
+		}
+	}
+}
+
+uint16_t ESP::CmdManager::stateFlags()
+{
+	return m_stateFlags;
 }

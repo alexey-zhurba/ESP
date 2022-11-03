@@ -121,11 +121,23 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="MotorManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="PinDef.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="__vm\.ESP.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CmdManager.cpp" />
     <ClCompile Include="LineNavigator.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="MotorManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
