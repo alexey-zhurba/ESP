@@ -4,7 +4,7 @@
 
 #include "CmdManager.h"
 
-ESP::CmdManager::CmdManager() : m_cmdQueueStart(0), m_cmdQueueEnd(0), m_cmdQueueLength(0), m_callbackSP(0) 
+_ESP::CmdManager::CmdManager() : m_cmdQueueStart(0), m_cmdQueueEnd(0), m_cmdQueueLength(0), m_callbackSP(0) 
 {
 	CmdCallback callback;
 	callback.cmdHandler = defaultCmdHandler;
@@ -14,12 +14,12 @@ ESP::CmdManager::CmdManager() : m_cmdQueueStart(0), m_cmdQueueEnd(0), m_cmdQueue
 	registerCmdCallback(callback);
 }
 
-ESP::EspCmd ESP::CmdManager::pop()
+_ESP::EspCmd _ESP::CmdManager::pop()
 {
 	if (m_cmdQueueStart == m_cmdQueueEnd)
 	{
 		//TODO: Error message (underflow)
-		return;
+		return EspCmd{ 0 };
 	}
 	int cmdQueueStart = m_cmdQueueStart;
 	m_cmdQueueStart = (m_cmdQueueStart + 1) % MAX_COMMANDS;
@@ -27,17 +27,17 @@ ESP::EspCmd ESP::CmdManager::pop()
 	return m_cmdQueue[cmdQueueStart];
 }
 
-void ESP::CmdManager::defaultCmdHandler(EspCmd cmd, void* param)
+void _ESP::CmdManager::defaultCmdHandler(EspCmd cmd, void* param)
 {
 }
 
-ESP::CmdManager* ESP::CmdManager::instance()
+_ESP::CmdManager* _ESP::CmdManager::instance()
 {
 	static CmdManager g_cmdManager;
 	return &g_cmdManager;
 }
 
-void ESP::CmdManager::flushCmds()
+void _ESP::CmdManager::flushCmds()
 {
 	while (m_cmdQueueLength > 0)
 	{
@@ -59,7 +59,7 @@ void ESP::CmdManager::flushCmds()
 	}
 }
 
-void ESP::CmdManager::sendCmd(EspCmd cmd)
+void _ESP::CmdManager::sendCmd(EspCmd cmd)
 {
 	int cmdQueueEnd = (m_cmdQueueEnd + 1) % MAX_COMMANDS;
 	if (cmdQueueEnd == m_cmdQueueStart)
@@ -72,13 +72,13 @@ void ESP::CmdManager::sendCmd(EspCmd cmd)
 	++m_cmdQueueLength;
 }
 
-void ESP::CmdManager::registerCmdCallback(CmdCallback callback)
+void _ESP::CmdManager::registerCmdCallback(CmdCallback callback)
 {
 	if (m_callbackSP < COUNT_OF(m_callbackStack))
 		m_callbackStack[m_callbackSP++] = callback;
 }
 
-void ESP::CmdManager::unregisterCmdCallback(CmdCallback callback)
+void _ESP::CmdManager::unregisterCmdCallback(CmdCallback callback)
 {
 	for (int i = m_callbackSP - 1; i >= 0; --i)
 	{
@@ -93,7 +93,7 @@ void ESP::CmdManager::unregisterCmdCallback(CmdCallback callback)
 	}
 }
 
-uint16_t ESP::CmdManager::stateFlags()
+uint16_t _ESP::CmdManager::stateFlags()
 {
 	return m_stateFlags;
 }

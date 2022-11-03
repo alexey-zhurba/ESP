@@ -9,11 +9,12 @@
 	#include "WProgram.h"
 #endif
 
-#include <EspCmd.h>
+#include "EspCmd.h"
+#include <RoboApi.h>
 
 #define MAX_COMMANDS 100
 
-namespace ESP {
+namespace _ESP {
 	typedef void(*cmdHandler_fn)(EspCmd cmd, void* param);
 	struct CmdCallback {
 		cmdHandler_fn cmdHandler;

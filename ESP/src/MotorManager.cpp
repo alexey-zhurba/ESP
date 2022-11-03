@@ -4,7 +4,7 @@
 
 #include "MotorManager.h"
 
-ESP::MotorManager::MotorManager() : m_motor(RoboApi::MotorController(MOTOR_L_IA, MOTOR_L_IB), RoboApi::MotorController(MOTOR_R_IA, MOTOR_R_IB))
+_ESP::MotorManager::MotorManager() : m_motor(RoboApi::MotorController(MOTOR_L_IA, MOTOR_L_IB), RoboApi::MotorController(MOTOR_R_IA, MOTOR_R_IB))
 {
     CmdCallback callback;
     callback.cmdHandler = (cmdHandler_fn)handlerMove;
@@ -16,9 +16,9 @@ ESP::MotorManager::MotorManager() : m_motor(RoboApi::MotorController(MOTOR_L_IA,
     callback.bMaskNot = true;
 }
 
-void ESP::MotorManager::handlerMove(EspCmd cmd, MotorManager* _this)
+void _ESP::MotorManager::handlerMove(EspCmd cmd, MotorManager* _this)
 {
-    ESP::EspCmd::move_t move = cmd.move;
+    _ESP::EspCmd::move_t move = cmd.move;
     if (!move.forward && !move.left
         || move.forward && move.left //kein simultanes drehen und fahren -> kein joystick
         )
@@ -44,18 +44,18 @@ void ESP::MotorManager::handlerMove(EspCmd cmd, MotorManager* _this)
     }
 }
 
-void ESP::MotorManager::handlerStop(EspCmd cmd, MotorManager* _this)
+void _ESP::MotorManager::handlerStop(EspCmd cmd, MotorManager* _this)
 {
     _this->m_motor.stop();
 }
 
-ESP::MotorManager* ESP::MotorManager::instance()
+_ESP::MotorManager* _ESP::MotorManager::instance()
 {
     static MotorManager g_instance;
     return &g_instance;
 }
 
-void ESP::MotorManager::createMove(int forward, int left, bool bStop)
+void _ESP::MotorManager::createMove(int forward, int left, bool bStop)
 {
     EspCmd cmd;
     if (!bStop) 

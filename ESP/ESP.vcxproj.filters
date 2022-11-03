@@ -24,30 +24,30 @@
     <ClInclude Include="__vm\.ESP.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LineNavigator.h">
+    <ClInclude Include="src\CmdManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EspCmd.h">
+    <ClInclude Include="src\EspCmd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CmdManager.h">
+    <ClInclude Include="src\LineNavigator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MotorManager.h">
+    <ClInclude Include="src\MotorManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PinDef.h">
+    <ClInclude Include="src\PinDef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LineNavigator.cpp">
+    <ClCompile Include="src\CmdManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CmdManager.cpp">
+    <ClCompile Include="src\LineNavigator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MotorManager.cpp">
+    <ClCompile Include="src\MotorManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

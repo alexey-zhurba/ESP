@@ -4,7 +4,7 @@
 
 #include "LineNavigator.h"
 
-ESP::LineNavigator::LineNavigator(IRSensor irSensLinks, IRSensor irSensRechts) : m_irSensLinks(irSensLinks), m_irSensRechts(irSensRechts), m_motorMngr(MotorManager::instance())
+_ESP::LineNavigator::LineNavigator(IRSensor irSensLinks, IRSensor irSensRechts) : m_irSensLinks(irSensLinks), m_irSensRechts(irSensRechts), m_motorMngr(MotorManager::instance())
 {
 	setSpeed(100);
 	setRotationSpeed(getSpeed() / 2);
@@ -19,7 +19,7 @@ ESP::LineNavigator::LineNavigator(IRSensor irSensLinks, IRSensor irSensRechts) :
 	CmdManager::instance()->registerCmdCallback(callback);
 }
 
-ESP::LineNavigator::~LineNavigator()
+_ESP::LineNavigator::~LineNavigator()
 {
 	CmdCallback callback;
 	callback.cmdHandler = (cmdHandler_fn)handlerAI;
@@ -32,27 +32,27 @@ ESP::LineNavigator::~LineNavigator()
 	CmdManager::instance()->unregisterCmdCallback(callback);
 }
 
-void ESP::LineNavigator::setSpeed(int iSpeed)
+void _ESP::LineNavigator::setSpeed(int iSpeed)
 {
 	m_iSpeed = iSpeed;
 }
 
-int ESP::LineNavigator::getSpeed()
+int _ESP::LineNavigator::getSpeed()
 {
 	return m_iSpeed;
 }
 
-void ESP::LineNavigator::setRotationSpeed(int iSpeedRot)
+void _ESP::LineNavigator::setRotationSpeed(int iSpeedRot)
 {
 	m_iSpeedRot = iSpeedRot;
 }
 
-int ESP::LineNavigator::getRotationSpeed()
+int _ESP::LineNavigator::getRotationSpeed()
 {
 	return m_iSpeedRot;
 }
 
-void ESP::LineNavigator::start()
+void _ESP::LineNavigator::start()
 {
 	if (!isStopped())
 		return;
@@ -61,7 +61,7 @@ void ESP::LineNavigator::start()
 	TimedObject::start();
 }
 
-void ESP::LineNavigator::stop()
+void _ESP::LineNavigator::stop()
 {
 	if (isStopped())
 		return;
@@ -69,18 +69,18 @@ void ESP::LineNavigator::stop()
 	m_motorMngr->createMove(0, 0, true);
 }
 
-void ESP::LineNavigator::handlerAI(EspCmd cmd, LineNavigator* _this)
+void _ESP::LineNavigator::handlerAI(EspCmd cmd, LineNavigator* _this)
 {
 	_this->start();
 }
 
-void ESP::LineNavigator::handlerStopAI(EspCmd cmd, LineNavigator* _this)
+void _ESP::LineNavigator::handlerStopAI(EspCmd cmd, LineNavigator* _this)
 {
 	_this->stop();
 	//TODO: sendCmd FL_USER maybe global handler manager for both FL_USER AND FL_AI is better
 }
 
-void ESP::LineNavigator::update()
+void _ESP::LineNavigator::update()
 {
 	bool bLWhite = m_irSensLinks.isWhite();
 	bool bRWhite = m_irSensRechts.isWhite();

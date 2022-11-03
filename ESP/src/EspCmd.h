@@ -1,4 +1,4 @@
-// ESPCmd.h
+// _ESPCmd.h
 
 #ifndef _ESPCMD_h
 #define _ESPCMD_h
@@ -13,7 +13,7 @@
 #define FL_MOVE (1 << 1)
 #define FL_AI (1 << 2)
 
-namespace ESP {
+namespace _ESP {
 	enum CmdOrigin {
 		SysCmd = 0, UsrCmd = 1
 	};

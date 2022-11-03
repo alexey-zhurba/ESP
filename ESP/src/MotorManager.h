@@ -10,13 +10,13 @@
 #endif
 
 #include <RoboApi.h>
-#include <CmdManager.h>
-#include <PinDef.h>
+#include "CmdManager.h"
+#include "PinDef.h"
 
-namespace ESP {
+namespace _ESP {
 	class MotorManager {
 	private:
-		MotorGroup m_motor;
+		RoboApi::MotorGroup m_motor;
 		MotorManager();
 		static void handlerMove(EspCmd cmd, MotorManager* _this);
 		static void handlerStop(EspCmd cmd, MotorManager* _this);
