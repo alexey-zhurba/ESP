@@ -14,6 +14,7 @@ _ESP::MotorManager::MotorManager() : m_motor(RoboApi::MotorController(MOTOR_L_IA
     CmdManager::instance()->registerCmdCallback(callback);
     callback.cmdHandler = (cmdHandler_fn)handlerStop;
     callback.bMaskNot = true;
+    CmdManager::instance()->registerCmdCallback(callback);
 }
 
 void _ESP::MotorManager::handlerMove(EspCmd cmd, MotorManager* _this)

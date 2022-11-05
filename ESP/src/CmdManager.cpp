@@ -17,18 +17,19 @@ _ESP::CmdManager::CmdManager() : m_cmdQueueStart(-1), m_cmdQueueEnd(-1), m_cmdQu
 _ESP::EspCmd _ESP::CmdManager::pop()
 {
 	PRINT_ENTER_FUNC();
-	if (m_cmdQueueStart == m_cmdQueueEnd)
+	if (m_cmdQueueEnd == -1)
 	{
 		//TODO: Error message (underflow)
 		PRINT_EXIT_FUNC();
 		return EspCmd{ 0 };
 	}
-	if (m_cmdQueueStart == -1)
-	{
-		m_cmdQueueStart = 0;
-	}
 	int cmdQueueStart = m_cmdQueueStart;
 	m_cmdQueueStart = (m_cmdQueueStart + 1) % MAX_COMMANDS;
+	if (cmdQueueStart == m_cmdQueueEnd)
+	{
+		m_cmdQueueStart = -1;
+		m_cmdQueueEnd = -1;
+	}
 	--m_cmdQueueLength;
 	DEBUG_PRINTLN("popping cmd");
 	DEBUG_PRINT("New m_cmdQueueStart ");
@@ -58,6 +59,8 @@ void _ESP::CmdManager::flushCmds()
 		EspCmd cmd = pop();
 		DEBUG_PRINT("Popped command. flags: ");
 		DEBUG_PRINTLN(cmd.flags);
+		DEBUG_PRINT("m_stateFlags: ");
+		DEBUG_PRINTLN(m_stateFlags);
 		if (cmd.flags & FL_ACTIVE)
 		{
 			for (int i = 0; i < m_callbackSP; ++i)
@@ -65,6 +68,9 @@ void _ESP::CmdManager::flushCmds()
 				bool condition = ((!m_callbackStack[i].bMaskNot && ((cmd.flags & m_callbackStack[i].triggerMask) == m_callbackStack[i].triggerMask)) //mask triggered ?
 					|| (m_callbackStack[i].bMaskNot && ((cmd.flags & ~m_callbackStack[i].triggerMask) == cmd.flags))) //not mask triggered ?
 					&& ((cmd.flags & m_callbackStack[i].triggerMask) != (m_stateFlags & m_callbackStack[i].triggerMask)); //mask changed ?
+				DEBUG_PRINT(condition ? "Condition was met for triggermask " : "Condition not met for triggermask ");
+				DEBUG_PRINT(m_callbackStack[i].triggerMask);
+				DEBUG_PRINTLN(m_callbackStack[i].bMaskNot ? " bMaskNot: true" : " bMaskNot: false");
 				if (condition)
 				{
 					DEBUG_PRINT("Calling cmd handler @ ");
@@ -89,6 +95,10 @@ void _ESP::CmdManager::sendCmd(EspCmd cmd)
 		PRINT_EXIT_FUNC();
 		//TODO: Error message (overflow)
 		return;
+	}
+	if (m_cmdQueueEnd == -1)
+	{
+		m_cmdQueueStart = 0;
 	}
 	m_cmdQueueEnd = cmdQueueEnd;
 	m_cmdQueue[m_cmdQueueEnd] = cmd;

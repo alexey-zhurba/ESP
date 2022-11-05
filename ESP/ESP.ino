@@ -17,14 +17,14 @@ RoboApi::IRSensor irSensLinks(IR_SENS_L), irSensRechts(IR_SENS_R);
 _ESP::LineNavigator lineNav(irSensLinks, irSensRechts);
 // the setup function runs once when you press reset or power the board
 
+Timer testTmr;
 void setup() {
 	_ESP::EspCmd cmd{ 0 };
 	cmd.flags = FL_ACTIVE;
 	cmd.origin = _ESP::SysCmd;
 	_ESP::CmdManager::instance()->sendCmd(cmd);
 	_ESP::CmdManager::instance()->flushCmds();
-	_ESP::CmdManager::instance()->sendCmd(cmd);
-	_ESP::MotorManager::instance()->createMove(255, 0, false, _ESP::SysCmd);
+	testTmr.start();
 	Serial.begin(9600);
 }
 
@@ -32,4 +32,11 @@ void setup() {
 void loop() {
 	_ESP::CmdManager::instance()->flushCmds();
 	RoboApi::TimedObjectManager::instance()->update();
+	if (testTmr.elapsedMillis() > 1000)
+	{
+		_ESP::EspCmd cmd{ 0 };
+		cmd.flags = _ESP::CmdManager::instance()->stateFlags() | FL_AI;
+		cmd.origin = _ESP::SysCmd;
+		_ESP::CmdManager::instance()->sendCmd(cmd);
+	}
 }
