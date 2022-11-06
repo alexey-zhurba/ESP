@@ -51,13 +51,13 @@ _ESP::CmdManager* _ESP::CmdManager::instance()
 void _ESP::CmdManager::flushCmds()
 {
 	PRINT_ENTER_FUNC();
-	DEBUG_PRINT("Flushing ");
+	DEBUG_PRINT("CmdManager: Flushing ");
 	DEBUG_PRINT(m_cmdQueueLength);
 	DEBUG_PRINTLN(" commands.");
 	while (m_cmdQueueLength > 0)
 	{
 		EspCmd cmd = pop();
-		DEBUG_PRINT("Popped command. flags: ");
+		DEBUG_PRINT("CmdManager: Popped command. flags: ");
 		DEBUG_PRINTLN(cmd.flags);
 		DEBUG_PRINT("m_stateFlags: ");
 		DEBUG_PRINTLN(m_stateFlags);
@@ -68,12 +68,12 @@ void _ESP::CmdManager::flushCmds()
 				bool condition = ((!m_callbackStack[i].bMaskNot && ((cmd.flags & m_callbackStack[i].triggerMask) == m_callbackStack[i].triggerMask)) //mask triggered ?
 					|| (m_callbackStack[i].bMaskNot && ((cmd.flags & ~m_callbackStack[i].triggerMask) == cmd.flags))) //not mask triggered ?
 					&& ((cmd.flags & m_callbackStack[i].triggerMask) != (m_stateFlags & m_callbackStack[i].triggerMask)); //mask changed ?
-				DEBUG_PRINT(condition ? "Condition was met for triggermask " : "Condition not met for triggermask ");
+				DEBUG_PRINT(condition ? "CmdManager: Condition was met for triggermask " : "CmdManager: Condition not met for triggermask ");
 				DEBUG_PRINT(m_callbackStack[i].triggerMask);
 				DEBUG_PRINTLN(m_callbackStack[i].bMaskNot ? " bMaskNot: true" : " bMaskNot: false");
 				if (condition)
 				{
-					DEBUG_PRINT("Calling cmd handler @ ");
+					DEBUG_PRINT("CmdManager: Calling cmd handler @ ");
 					DEBUG_PRINT((__uintptr_t)m_callbackStack[i].cmdHandler);
 					DEBUG_PRINT(" with param: ");
 					DEBUG_PRINTLN((__uintptr_t)m_callbackStack[i].param);

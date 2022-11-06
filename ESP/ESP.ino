@@ -9,9 +9,6 @@
 #include <RoboApi.h>
 #include "src\LineNavigator.h"
 
-#define IR_SENS_L 1
-#define IR_SENS_R 2
-
 RoboApi::IRSensor irSensLinks(IR_SENS_L), irSensRechts(IR_SENS_R);
 
 _ESP::LineNavigator lineNav(irSensLinks, irSensRechts);
@@ -31,7 +28,8 @@ void setup() {
 // the loop function runs over and over again until power down or reset
 void loop() {
 	_ESP::CmdManager::instance()->flushCmds();
-	RoboApi::TimedObjectManager::instance()->update();
+	RoboApi::TimedObjectManager::instance()->update();   //stateFlags() should return last cmd flag or stateflags fix this
+	_ESP::CmdManager::instance()->flushCmds();
 	if (testTmr.elapsedMillis() > 1000)
 	{
 		_ESP::EspCmd cmd{ 0 };

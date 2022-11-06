@@ -6,8 +6,8 @@
 
 _ESP::LineNavigator::LineNavigator(IRSensor irSensLinks, IRSensor irSensRechts) : m_irSensLinks(irSensLinks), m_irSensRechts(irSensRechts), m_motorMngr(MotorManager::instance())
 {
-	setSpeed(100);
-	setRotationSpeed(getSpeed() / 2);
+	setSpeed(75);
+	setRotationSpeed(90);
 	CmdCallback callback;
 	callback.cmdHandler = (cmdHandler_fn)handlerAI;
 	callback.param = this;
@@ -76,32 +76,35 @@ void _ESP::LineNavigator::handlerAI(EspCmd cmd, LineNavigator* _this)
 
 void _ESP::LineNavigator::handlerStopAI(EspCmd cmd, LineNavigator* _this)
 {
+	PRINT_ENTER_FUNC();
 	_this->stop();
 	//TODO: sendCmd FL_USER maybe global handler manager for both FL_USER AND FL_AI is better
+	DEBUG_PRINTLN("LineNavigator: stopping");
+	PRINT_EXIT_FUNC();
 }
 
 void _ESP::LineNavigator::update()
 {
+	PRINT_ENTER_FUNC();
+
 	bool bLWhite = m_irSensLinks.isWhite();
 	bool bRWhite = m_irSensRechts.isWhite();
 
-	if (bLWhite != m_bLWhiteLast
-		|| bRWhite != m_bRWhiteLast)
+	if (!bLWhite)
 	{
-		m_bLWhiteLast = bLWhite;
-		m_bRWhiteLast = bRWhite;
-
-		if (!bLWhite)
-		{
-			m_motorMngr->createMove(0, getRotationSpeed(), false, SysCmd); //linker sensor auf schwarz -> nach links
-		}
-		else if (!bRWhite)
-		{
-			m_motorMngr->createMove(0, -getRotationSpeed(), false, SysCmd); //rechter sensor auf schwarz -> nach rechts
-		}
-		else
-		{
-			m_motorMngr->createMove(getSpeed(), 0, false, SysCmd);
-		}
+		DEBUG_PRINTLN("LineNavigator: !bLWhite -> Move left");
+		m_motorMngr->createMove(0, getRotationSpeed(), false, SysCmd); //linker sensor auf schwarz -> nach links
 	}
+	else if (!bRWhite)
+	{
+		DEBUG_PRINTLN("LineNavigator: !bRWhite -> Move right");
+		m_motorMngr->createMove(0, -(getRotationSpeed()+10), false, SysCmd); //rechter sensor auf schwarz -> nach rechts
+	}
+	else
+	{
+		DEBUG_PRINTLN("LineNavigator: bLWhite && bRWhite -> Move forward");
+		m_motorMngr->createMove(getSpeed(), 0, false, SysCmd);
+	}
+
+	PRINT_EXIT_FUNC();
 }

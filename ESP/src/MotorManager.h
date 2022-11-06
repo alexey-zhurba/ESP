@@ -17,6 +17,8 @@ namespace _ESP {
 	class MotorManager {
 	private:
 		RoboApi::MotorGroup m_motor;
+		EspCmd::move_t m_moveState;
+		bool m_bStopped;
 		MotorManager();
 		static void handlerMove(EspCmd cmd, MotorManager* _this);
 		static void handlerStop(EspCmd cmd, MotorManager* _this);
@@ -25,6 +27,7 @@ namespace _ESP {
 		void operator=(MotorManager const&) = delete;
 		static MotorManager* instance();
 		void createMove(int forward, int left, bool bStop, CmdOrigin origin);
+		EspCmd::move_t moveState();
 	};
 }
 

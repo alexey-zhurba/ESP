@@ -6,6 +6,9 @@
 
 _ESP::MotorManager::MotorManager() : m_motor(RoboApi::MotorController(MOTOR_L_IA, MOTOR_L_IB), RoboApi::MotorController(MOTOR_R_IA, MOTOR_R_IB))
 {
+    m_moveState.forward = 0;
+    m_moveState.left = 0;
+
     CmdCallback callback;
     callback.cmdHandler = (cmdHandler_fn)handlerMove;
     callback.param = this;
@@ -58,22 +61,35 @@ _ESP::MotorManager* _ESP::MotorManager::instance()
 
 void _ESP::MotorManager::createMove(int forward, int left, bool bStop, CmdOrigin origin)
 {
-    EspCmd cmd;
     PRINT_ENTER_FUNC();
+
+    EspCmd cmd;
     cmd.origin = origin;
-    if (!bStop) 
-    {
-        cmd.flags = CmdManager::instance()->stateFlags() | FL_MOVE;
-        cmd.move.forward = forward;
-        cmd.move.left = left;
-    }
-    else 
+
+    if (moveState().forward != forward
+        || moveState().left != left
+        || m_bStopped != bStop)
     {
         cmd.flags = CmdManager::instance()->stateFlags() & (~FL_MOVE);
+        CmdManager::instance()->sendCmd(cmd);
     }
-    
-    DEBUG_PRINT("creating move cmd. flags: ");
-    DEBUG_PRINTLN(cmd.flags);
-    CmdManager::instance()->sendCmd(cmd);
+
+    m_moveState.forward = forward;
+    m_moveState.left = left;
+    cmd.move = moveState();
+
+
+    if (!bStop)
+    {
+        cmd.flags = CmdManager::instance()->stateFlags() | FL_MOVE;
+        DEBUG_PRINT("creating move cmd. flags: ");
+        DEBUG_PRINTLN(cmd.flags);
+        CmdManager::instance()->sendCmd(cmd);
+    }
     PRINT_EXIT_FUNC();
+}
+
+_ESP::EspCmd::move_t _ESP::MotorManager::moveState()
+{
+    return m_moveState;
 }

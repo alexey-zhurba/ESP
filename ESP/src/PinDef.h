@@ -9,10 +9,13 @@
 	#include "WProgram.h"
 #endif
 
-#define MOTOR_L_IA 3
-#define MOTOR_L_IB 2
-#define MOTOR_R_IA 19
-#define MOTOR_R_IB 18
+#define MOTOR_L_IA 2
+#define MOTOR_L_IB 3
+#define MOTOR_R_IA 18
+#define MOTOR_R_IB 19
+
+#define IR_SENS_L A0
+#define IR_SENS_R A1
 
 
 #endif
